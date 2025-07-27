@@ -23,6 +23,7 @@ const GameContextProvider = ({ children }) => {
             setGame(g);
         })
         socket.on("update_messages", (m) => {
+
             setMessages(m);
         })
 
@@ -37,6 +38,10 @@ const GameContextProvider = ({ children }) => {
             socket.disconnect();
         }
     }, []);
+
+    useEffect(()=>{
+        console.log(messages);
+    }, [messages])
 
     function getPlayer(socketId) {
         console.log("players: ", players);
