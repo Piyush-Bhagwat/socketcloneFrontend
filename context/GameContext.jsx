@@ -1,6 +1,7 @@
 'use client'
 
 import socket from '@/utils/socket';
+import axios from 'axios';
 import React, { createContext, useContext, useEffect, useState } from 'react'
 const gameContext = createContext(null);
 
@@ -12,8 +13,31 @@ const GameContextProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
     const [word, setWord] = useState("");
 
+    const [serverActive, setServerActive] = useState(false);
+
+    const PORT = "https://socketclone.onrender.com";
+
     useEffect(() => {
-        // socket.connect();
+
+        async function wakeServer(retries = 5, delay = 2000) {
+            setServerActive(false);
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const res = await axios.get(`${PORT}/wake-server`);
+                    console.log("Server woke up:", res.data);
+                    setServerActive(true);
+                    return;
+                } catch (err) {
+                    console.log(`Server not up yet, retrying in ${delay}ms...`);
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2; // exponential backoff
+                }
+            }
+
+            console.log("Failed to wake server after retries.");
+        }
+        wakeServer();
 
         socket.on("updatePlayers", (plyrs) => {
             setPlayers(plyrs);
@@ -39,10 +63,6 @@ const GameContextProvider = ({ children }) => {
         }
     }, []);
 
-    useEffect(()=>{
-        console.log(messages);
-    }, [messages])
-
     function getPlayer(socketId) {
         console.log("players: ", players);
         console.log("socketID:", socketId);
@@ -50,7 +70,7 @@ const GameContextProvider = ({ children }) => {
         return players.find(p => p.id == socketId);
     }
 
-    const v = { players, setPlayers, gameRoom, setGameRoom, user, setUser, game, setGame, getPlayer, messages, setMessages, word, setWord }
+    const v = { players, setPlayers, gameRoom, setGameRoom, user, setUser, game, setGame, getPlayer, messages, setMessages, word, setWord, serverActive }
     return (
         <gameContext.Provider value={v}>{children}</gameContext.Provider>
     )

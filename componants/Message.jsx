@@ -4,19 +4,18 @@ import { FaUserCircle } from 'react-icons/fa';
 
 // System messages: no icon, centered text
 const SystemMessage = ({ msg }) => (
-    <div className="flex justify-center p-2">
+    <div className="flex justify-center px-2 pt-1">
         <p className="text-sm italic text-gray-400">{msg.text}</p>
     </div>
 );
+//ayah_shruti
+//itskritikakapoor
 
 // Normal messages: icon + user + text
 const NormalMessage = ({ msg }) => (
-    <div className="flex items-start gap-2 p-2 rounded-lg shadow bg-gray-600/70 text-gray-100">
-        <FaUserCircle size={24} className="text-gray-300" />
-        <div>
-            <p className="font-semibold">{msg.user}</p>
+    <div className="flex items-center justify-start rounded-lg shadow bg-gray-600/70 text-gray-100 px-2 gap-2">
+            <p className="font-semibold">{msg.user}:</p>
             <p className="text-sm">{msg.text}</p>
-        </div>
     </div>
 );
 
@@ -33,7 +32,7 @@ const HiddenMessage = ({ msg }) => (
 
 // Answer messages: standout style, no icon
 const AnswerMessage = ({ msg }) => (
-    <div className="flex items-start gap-2 p-2 rounded-lg shadow bg-green-600/80 text-white animate-pulse">
+    <div className="text-center px-2 rounded-lg shadow bg-green-600/80 text-white animate-pulse">
         <div>
             <p className="font-semibold">{msg.text}</p>
         </div>

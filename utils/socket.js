@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Replace with your backend URL
-const socket = io("http://localhost:3612", {
+let socket = io("http://localhost:3612", {
     reconnection: false,
     autoConnect: false
 
@@ -9,3 +9,9 @@ const socket = io("http://localhost:3612", {
 
 export default socket;
 
+export function disconnectSocket() {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+}

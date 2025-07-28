@@ -1,14 +1,21 @@
 import { useGameContext } from '@/context/GameContext';
 import socket from '@/utils/socket';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Message from './Message';
 
 const Chat = ({ isDrawer }) => {
     const [message, setMessage] = useState("");
     const { user, messages, gameRoom } = useGameContext();
     const [ time, setTime ] = useState(0);
+    const bottomRef = useRef(null);
 
     useEffect(() => { socket.on("tick", (t) => { setTime(t); console.log("tick") }) }, [])
+
+    useEffect(() => {
+        if(bottomRef){
+            bottomRef.current?.scrollIntoView();
+        }
+    } ,[messages])
 
     function handleMessageSend() {
         if (!message) return;
@@ -34,8 +41,9 @@ const Chat = ({ isDrawer }) => {
                 <h1 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-blue-400">Chats</h1>
                 {time}
             </div>
-            <div className="overflow-y-auto flex flex-col gap-1 sm:gap-2 p-2 bg-gray-700 rounded-lg flex-grow">
+            <div className="overflow-y-auto flex flex-col gap-1 sm:gap-2 p-2 bg-gray-700 rounded-lg flex-grow max-h-48 ">
                 {renderMessages()}
+                <div ref={bottomRef}></div>
             </div>
             < div className="flex gap-1 sm:gap-2 mt-2" >
                 <input

@@ -5,9 +5,10 @@ import Message from "@/componants/Message";
 import ScoreBoard from "@/componants/ScoreBoard";
 import WordSelect from "@/componants/WordSelect";
 import { useGameContext } from "@/context/GameContext";
-import socket from '@/utils/socket';
+import socket, { disconnectSocket } from '@/utils/socket';
+import { usePathname } from "next/navigation";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -71,6 +72,18 @@ const Page = () => {
             socket.off('scores');
         };
     }, [socket, user, isDrawer, players]);
+
+    useEffect(() => {
+
+        console.log("mounted");
+
+        return () => {
+            console.log("disconnecting...");
+
+            socket.disconnect();
+        };
+
+    }, [])
 
     async function handleWordSelect(w) {
         setWordOptions(null);
