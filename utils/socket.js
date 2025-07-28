@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Replace with your backend URL
-let socket = io("http://localhost:3612", {
+let socket = io("https://socketclone.onrender.com", {
     reconnection: false,
     autoConnect: false
 
